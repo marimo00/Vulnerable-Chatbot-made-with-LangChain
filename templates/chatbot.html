@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            width: 80%;
+            max-width: 600px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+        }
+        h1 {
+            margin-top: 0;
+        }
+        .chatbox {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            height: 300px;
+            overflow-y: auto;
+            background: #fafafa;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            display: flex;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .message.user {
+            text-align: right;
+            margin-left: auto; /* Align user messages to the right */
+        }
+        .message.bot {
+            text-align: left;
+            margin-right: auto; /* Align bot messages to the left */
+            border: 1px solid #000;
+        }
+        .message.hidden {
+            display: none;
+        }
+        /* 추가된 스타일 */
+        .loading {
+            font-style: italic;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>phi3.5</h1>
+        <div id="chatbox" class="chatbox"></div>
+        <div class="input-group">
+            <input type="text" id="question" placeholder="Ask me anything...">
+            <button id="sendButton" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        function appendMessage(text, sender) {
+            const chatbox = document.getElementById('chatbox');
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+            messageDiv.textContent = text;
+            chatbox.appendChild(messageDiv);
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
+        function toggleInputState(disabled) {
+            const questionInput = document.getElementById('question');
+            const sendButton = document.getElementById('sendButton');
+            questionInput.disabled = disabled;
+            sendButton.disabled = disabled;
+        }
+
+        function handleError(error) {
+            appendMessage('An error occurred: ' + error.message, 'bot');
+        }
+
+        function sendMessage() {
+            const questionInput = document.getElementById('question');
+            const question = questionInput.value.trim();
+            if (question) {
+                appendMessage(question, 'user');
+                questionInput.value = '';
+                toggleInputState(true);
+
+                // 로딩 메시지를 추가
+                const loadingMessage = document.createElement('div');
+                loadingMessage.classList.add('message', 'bot', 'loading');
+                loadingMessage.textContent = 'Generating answer...';
+                document.getElementById('chatbox').appendChild(loadingMessage);
+                document.getElementById('chatbox').scrollTop = document.getElementById('chatbox').scrollHeight;
+
+                // 질문을 XML 형식으로 변환
+                const xmlData = `<query><question>${question}</question></query>`;
+
+                fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        'xml_data': xmlData
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    loadingMessage.remove(); // 로딩 메시지를 제거
+                    if (data.answer) {
+                        appendMessage(data.answer, 'bot');
+                    } else if (data.error) {
+                        appendMessage('Error: ' + data.error, 'bot');
+                    }
+                })
+                .catch(error => {
+                    loadingMessage.remove(); // 로딩 메시지를 제거
+                    handleError(error);
+                })
+                .finally(() => {
+                    toggleInputState(false);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
