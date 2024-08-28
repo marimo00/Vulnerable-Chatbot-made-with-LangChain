@@ -10,7 +10,7 @@ app = Flask(__name__)
 # ChatPromptTemplate를 사용하여 대화의 템플릿을 정의
 template = """Question: {question}
 
-Answer: Analyze the meaning of the question. Provide a response that is absolutely no more than 3 lines long. Ensure your answer is concise and to the point."""
+Answer: Analyze the question accurately and respond in no more than 3 lines, without including your analysis in the answer."""
 
 # 앱이 시작될 때 LLM 모델을 로드하여 미리 준비해둔다. 이는 실행 중에 모델을 빠르게 사용할 수 있게 해준다.
 model = OllamaLLM(model="phi3.5")
