@@ -1,0 +1,78 @@
+/*styles.css*/
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+}
+.container {
+    width: 80%;
+    max-width: 600px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-top: 20px;
+}
+h1 {
+    margin-top: 0;
+}
+.chatbox {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    height: 300px;
+    overflow-y: auto;
+    background: #fafafa;
+    margin-bottom: 20px;
+}
+.input-group {
+    display: flex;
+}
+input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+button {
+    padding: 10px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #0056b3;
+}
+.message {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 4px;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+.message.user {
+    text-align: right;
+    margin-left: auto;
+}
+.message.bot {
+    text-align: left;
+    margin-right: auto;
+    border: 1px solid #000;
+}
+.message.hidden {
+    display: none;
+}
+
+.loading {
+    font-style: italic;
+    color: #888;
+}
