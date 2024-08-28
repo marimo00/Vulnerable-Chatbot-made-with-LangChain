@@ -62,13 +62,16 @@
             padding: 10px;
             border-radius: 4px;
             max-width: 80%;
+            word-wrap: break-word;
         }
         .message.user {
             text-align: right;
+            margin-left: auto;
         }
         .message.bot {
             text-align: left;
-            border: 1px solid black;
+            margin-right: auto;
+            border: 1px solid #000;
         }
         .message.hidden {
             display: none;
@@ -82,7 +85,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Chatbot</h1>
+        <h1>phi3.5</h1>
         <div id="chatbox" class="chatbox"></div>
         <div class="input-group">
             <input type="text" id="question" placeholder="Ask me anything...">
@@ -91,11 +94,19 @@
     </div>
 
     <script>
+        function escapeHtml(text) {
+            const map = {
+                '<': '&lt;',
+                '>': '&gt;',
+            };
+            return text.replace(/[<>]/g, function(m) { return map[m]; });
+        }
+        
         function appendMessage(text, sender) {
             const chatbox = document.getElementById('chatbox');
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message', sender);
-            messageDiv.textContent = text;
+            messageDiv.textContent = escapeHtml(text);
             chatbox.appendChild(messageDiv);
             chatbox.scrollTop = chatbox.scrollHeight;
         }
@@ -108,7 +119,7 @@
         }
 
         function handleError(error) {
-            appendMessage('An error occurred: ' + error.message, 'bot');
+            appendMessage('An error occurred: ' + escapeHtml(error.message), 'bot'); // 에러 메시지 이스케이프
         }
 
         function sendMessage() {
