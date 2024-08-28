@@ -59,12 +59,24 @@
         }
         .message {
             margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+            max-width: 80%;
         }
         .message.user {
             text-align: right;
         }
         .message.bot {
             text-align: left;
+            background-color: #f8d7da; /* AI 메시지의 배경색 */
+        }
+        .message.hidden {
+            display: none;
+        }
+        /* 추가된 스타일 */
+        .loading {
+            font-style: italic;
+            color: #888;
         }
     </style>
 </head>
@@ -74,7 +86,7 @@
         <div id="chatbox" class="chatbox"></div>
         <div class="input-group">
             <input type="text" id="question" placeholder="Ask me anything...">
-            <button onclick="sendMessage()">Send</button>
+            <button id="sendButton" onclick="sendMessage()">Send</button>
         </div>
     </div>
 
@@ -82,11 +94,21 @@
         function appendMessage(text, sender) {
             const chatbox = document.getElementById('chatbox');
             const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message');
-            messageDiv.classList.add(sender);
+            messageDiv.classList.add('message', sender);
             messageDiv.textContent = text;
             chatbox.appendChild(messageDiv);
             chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
+        function toggleInputState(disabled) {
+            const questionInput = document.getElementById('question');
+            const sendButton = document.getElementById('sendButton');
+            questionInput.disabled = disabled;
+            sendButton.disabled = disabled;
+        }
+
+        function handleError(error) {
+            appendMessage('An error occurred: ' + error.message, 'bot');
         }
 
         function sendMessage() {
@@ -95,7 +117,15 @@
             if (question) {
                 appendMessage(question, 'user');
                 questionInput.value = '';
-                
+                toggleInputState(true);
+
+                // 로딩 메시지를 추가
+                const loadingMessage = document.createElement('div');
+                loadingMessage.classList.add('message', 'bot', 'loading');
+                loadingMessage.textContent = 'Generating answer...';
+                document.getElementById('chatbox').appendChild(loadingMessage);
+                document.getElementById('chatbox').scrollTop = document.getElementById('chatbox').scrollHeight;
+
                 fetch('/chat', {
                     method: 'POST',
                     headers: {
@@ -105,16 +135,27 @@
                         'question': question
                     })
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.answer) {
+                        loadingMessage.remove(); // 로딩 메시지를 제거
                         appendMessage(data.answer, 'bot');
                     } else if (data.error) {
+                        loadingMessage.remove(); // 로딩 메시지를 제거
                         appendMessage('Error: ' + data.error, 'bot');
                     }
                 })
                 .catch(error => {
-                    appendMessage('An error occurred: ' + error.message, 'bot');
+                    loadingMessage.remove(); // 로딩 메시지를 제거
+                    handleError(error);
+                })
+                .finally(() => {
+                    toggleInputState(false);
                 });
             }
         }
