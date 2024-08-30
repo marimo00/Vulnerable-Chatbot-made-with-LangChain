@@ -1,18 +1,8 @@
-/*script.js*/
-
-function escapeHtml(text) {
-    const map = {
-        '<': '&lt;',
-        '>': '&gt;',
-    };
-    return text.replace(/[<>]/g, function(m) { return map[m]; });
-}
-
 function appendMessage(text, sender) {
     const chatbox = document.getElementById('chatbox');
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message', sender);
-    messageDiv.textContent = escapeHtml(text);
+    messageDiv.textContent = text;
     chatbox.appendChild(messageDiv);
     chatbox.scrollTop = chatbox.scrollHeight;
 }
@@ -25,7 +15,7 @@ function toggleInputState(disabled) {
 }
 
 function handleError(error) {
-    appendMessage('An error occurred: ' + escapeHtml(error.message), 'bot');
+    appendMessage('An error occurred: ' + error.message, 'bot');
 }
 
 function sendMessage() {
@@ -58,12 +48,11 @@ function sendMessage() {
             return response.json();
         })
         .then(data => {
+            loadingMessage.remove();
             if (data.answer) {
-                loadingMessage.remove(); 
                 appendMessage(data.answer, 'bot');
             } else if (data.error) {
-                loadingMessage.remove();
-                appendMessage('Error: ' + data.error, 'bot');
+                appendMessage('error: ' + data.error, 'bot');
             }
         })
         .catch(error => {
@@ -75,3 +64,11 @@ function sendMessage() {
         });
     }
 }
+
+document.getElementById('question').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        sendMessage();
+    }
+});
+
+document.getElementById('sendButton').addEventListener('click', sendMessage);
