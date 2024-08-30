@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BooM! the hip</title>
+    <style>
+        body {
+            visibility: hidden;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            alert("Access Denied");
+            window.location.href = "/";
+        });
+    </script>
+    <link rel="stylesheet" href="static/css/admin.css">
+</head>
+<body>
+
+    <div class="header">
+        <h1>Admin Dashboard</h1>
+    </div>
+
+    <div class="content">
+        <h2>Welcome, Admin!</h2>
+        <p>Here you can manage the application, review logs, and adjust settings.</p>
+
+        <h3>System Overview</h3>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card bg-primary text-white mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Users</h5>
+                        <p class="card-text">View and manage user accounts.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-warning text-dark mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">System Logs</h5>
+                        <p class="card-text">Review system logs and events.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-success text-white mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Settings</h5>
+                        <p class="card-text">Configure system settings.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3>Recent Activities</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Activity</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2024-08-29</td>
+                    <td>User Login</td>
+                    <td><span class="badge bg-success">Success</span></td>
+                </tr>
+                <tr>
+                    <td>2024-08-28</td>
+                    <td>Settings Update</td>
+                    <td><span class="badge bg-warning">Pending</span></td>
+                </tr>
+                <tr>
+                    <td>2024-08-27</td>
+                    <td>System Backup</td>
+                    <td><span class="badge bg-success">Completed</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
