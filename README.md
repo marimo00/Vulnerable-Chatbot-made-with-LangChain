@@ -36,3 +36,7 @@ use curl!!!
   
  ![AI1](https://github.com/user-attachments/assets/05ff63f7-5d8a-4cc7-87a6-446bb27b8770)
  **If you got the result of the picture above, it is a version issue.**
+
+ #### Reference
+ [langchain github]https://github.com/langchain-ai/langchain/blob/v0.1.3/poetry.lock
+ [CVE-2024-1455]https://data.safetycli.com/vulnerabilities/CVE-2024-1455/66962/
