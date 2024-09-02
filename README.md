@@ -39,4 +39,5 @@ use curl!!!
 
  #### Reference
  [langchain github]https://github.com/langchain-ai/langchain/blob/v0.1.3/poetry.lock
+ 
  [CVE-2024-1455]https://data.safetycli.com/vulnerabilities/CVE-2024-1455/66962/
